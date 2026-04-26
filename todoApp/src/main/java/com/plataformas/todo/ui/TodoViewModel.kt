@@ -21,6 +21,13 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
     private val _filter = MutableStateFlow(TodoFilter.ALL)
     val filter: StateFlow<TodoFilter> = _filter
 
+    private val _isDarkTheme = MutableStateFlow(false)
+    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme
+
+    fun toggleTheme() {
+        _isDarkTheme.value = !_isDarkTheme.value
+    }
+
     // Combine the filter and the database stream to expose the filtered list
     val todos: StateFlow<List<Todo>> = combine(
         repository.getAllTodosStream(),

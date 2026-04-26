@@ -1,13 +1,15 @@
 package com.plataformas.todo.ui.screens
 
+
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,25 +18,50 @@ import com.plataformas.todo.ui.TodoFilter
 import com.plataformas.todo.ui.TodoViewModel
 import com.plataformas.todo.ui.components.AddEditTodoDialog
 import com.plataformas.todo.ui.components.TodoItemCard
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
+
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Alignment
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoListScreen(viewModel: TodoViewModel) {
     val todos by viewModel.todos.collectAsStateWithLifecycle()
     val currentFilter by viewModel.filter.collectAsStateWithLifecycle()
-
+    val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
     var todoToEdit by remember { mutableStateOf<Todo?>(null) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("My Tasks") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
+
+
+                TopAppBar(
+                    title = { Text("ToDo")},
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) ,
+                actions = {
+                    IconButton(onClick = { viewModel.toggleTheme() }) {
+                        Icon(
+                            imageVector = if (isDarkTheme)
+                                Icons.Default.DarkMode
+                            else
+                                Icons.Default.LightMode,
+                            contentDescription = "Toggle Theme"
+                        )
+                    }
+                }
                 )
-            )
+
+
+
+
         },
         floatingActionButton = {
             FloatingActionButton(
