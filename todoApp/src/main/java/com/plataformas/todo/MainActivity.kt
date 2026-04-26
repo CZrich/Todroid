@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plataformas.todo.ui.TodoViewModel
 import com.plataformas.todo.ui.screens.TodoListScreen
 import com.plataformas.todo.ui.theme.App01Theme
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+            val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
 
             App01Theme(darkTheme = isDarkTheme) {
                 Surface(

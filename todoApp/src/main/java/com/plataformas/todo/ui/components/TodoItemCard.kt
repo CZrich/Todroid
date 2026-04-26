@@ -2,7 +2,9 @@ package com.plataformas.todo.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
@@ -23,10 +25,14 @@ fun TodoItemCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardColor by animateColorAsState(
-        targetValue = if (todo.isCompleted) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
-        animationSpec = tween(300),
-        label = "cardColorAnimation"
+
+
+    val containerColor by animateColorAsState(
+        targetValue = if (todo.isCompleted)
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+        else
+            MaterialTheme.colorScheme.surface,
+        label = ""
     )
 
     Card(
@@ -34,8 +40,17 @@ fun TodoItemCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = cardColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (todo.isCompleted) 1.dp else 4.dp)
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (todo.isCompleted) 1.dp else 6.dp),
+        shape = RoundedCornerShape(20.dp),
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (todo.isCompleted)
+                MaterialTheme.colorScheme.outlineVariant
+            else
+                MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+        )
+
     ) {
         Row(
             modifier = Modifier
@@ -51,11 +66,20 @@ fun TodoItemCard(
             Spacer(modifier = Modifier.width(8.dp))
             
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                /*Text(
                     text = todo.title,
                     style = MaterialTheme.typography.titleMedium,
                     textDecoration = if (todo.isCompleted) TextDecoration.LineThrough else null,
                     color = if (todo.isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
+                )*/
+                Text(
+                    text = todo.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    textDecoration = if (todo.isCompleted) TextDecoration.LineThrough else null,
+                    color = if (todo.isCompleted)
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    else
+                        MaterialTheme.colorScheme.onSurface
                 )
                 if (todo.description.isNotBlank()) {
                     Spacer(modifier = Modifier.height(4.dp))

@@ -34,18 +34,16 @@ fun TodoListScreen(viewModel: TodoViewModel) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
     var todoToEdit by remember { mutableStateOf<Todo?>(null) }
-
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         topBar = {
-
-
-
                 TopAppBar(
                     title = { Text("ToDo")},
+                    scrollBehavior = scrollBehavior,
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ) ,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+
                 actions = {
                     IconButton(onClick = { viewModel.toggleTheme() }) {
                         Icon(
@@ -72,70 +70,82 @@ fun TodoListScreen(viewModel: TodoViewModel) {
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer
             ) {
-                Icon(Icons.Filled.Add, "Add Task")
+                Icon(Icons.Filled.Add, "Agregar Tarea")
             }
         }
     ) { padding ->
-        Column(
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-        ) {
-            // Filters
-            Row(
+                .padding(padding),
+            color = MaterialTheme.colorScheme.background
+        ){
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .fillMaxSize()
+                    .padding(padding)
             ) {
-                FilterChip(
-                    selected = currentFilter == TodoFilter.ALL,
-                    onClick = { viewModel.setFilter(TodoFilter.ALL) },
-                    label = { Text("All") }
-                )
-                FilterChip(
-                    selected = currentFilter == TodoFilter.PENDING,
-                    onClick = { viewModel.setFilter(TodoFilter.PENDING) },
-                    label = { Text("Pending") }
-                )
-                FilterChip(
-                    selected = currentFilter == TodoFilter.COMPLETED,
-                    onClick = { viewModel.setFilter(TodoFilter.COMPLETED) },
-                    label = { Text("Completed") }
-                )
-            }
-
-            // List of Tasks
-            if (todos.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                // Filters
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        text = "No tasks found",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+
+                    FilterChip(
+                        selected = currentFilter == TodoFilter.ALL,
+                        onClick = { viewModel.setFilter(TodoFilter.ALL) },
+                        label = { Text("Todos") }
+                    )
+                    FilterChip(
+                        selected = currentFilter == TodoFilter.PENDING,
+                        onClick = { viewModel.setFilter(TodoFilter.PENDING) },
+                        label = { Text("Pendientes") }
+
+                    )
+                    FilterChip(
+                        selected = currentFilter == TodoFilter.COMPLETED,
+                        onClick = { viewModel.setFilter(TodoFilter.COMPLETED) },
+                        label = { Text("Completados") }
+
                     )
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 80.dp)
-                ) {
-                    items(items = todos, key = { it.id }) { todo ->
-                        TodoItemCard(
-                            todo = todo,
-                            onCheckedChange = { viewModel.toggleTodoCompletion(todo) },
-                            onEdit = {
-                                todoToEdit = todo
-                                showDialog = true
-                            },
-                            onDelete = { viewModel.deleteTodo(todo) }
+
+                // List of Tasks
+                if (todos.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No se encontraron tareas",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 80.dp)
+                    ) {
+                        items(items = todos, key = { it.id }) { todo ->
+                            TodoItemCard(
+                                todo = todo,
+                                onCheckedChange = { viewModel.toggleTodoCompletion(todo) },
+                                onEdit = {
+                                    todoToEdit = todo
+                                    showDialog = true
+                                },
+                                onDelete = { viewModel.deleteTodo(todo) }
+                            )
+                        }
                     }
                 }
             }
+
         }
+
     }
 
     if (showDialog) {

@@ -19,7 +19,7 @@ fun AddEditTodoDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = if (todoToEdit == null) "New Task" else "Edit Task") },
+        title = { Text(text = if (todoToEdit == null) "Nueva Tarea" else "Editar Tarea") },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
@@ -28,7 +28,7 @@ fun AddEditTodoDialog(
                         title = it
                         titleError = it.isBlank()
                     },
-                    label = { Text("Title") },
+                    label = { Text("Titulo") },
                     singleLine = true,
                     isError = titleError,
                     modifier = Modifier.fillMaxWidth()
@@ -47,7 +47,7 @@ fun AddEditTodoDialog(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description (Optional)") },
+                    label = { Text("Descripción (Opcional)") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3
                 )
@@ -63,12 +63,12 @@ fun AddEditTodoDialog(
                     }
                 }
             ) {
-                Text("Save")
+                Text("Guardar")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text("Cancelar")
             }
         }
     )
